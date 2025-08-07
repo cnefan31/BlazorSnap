@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BlazorSnap</title>
+  <style>
+    body { 
+      margin: 0; 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      padding: 12px; 
+      width: 500px;
+      min-height: 400px;
+      font-size: 14px;
+    }
+    textarea, pre { 
+      width: 100%; 
+      box-sizing: border-box; 
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 12px;
+    }
+    textarea { 
+      height: 150px; 
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 8px;
+      resize: vertical;
+    }
+    pre { 
+      white-space: pre-wrap; 
+      margin: 8px 0; 
+      padding: 12px; 
+      background: #f8f9fa; 
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    button { 
+      margin-right: 8px; 
+      padding: 8px 16px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #106ebe;
+    }
+    .button-row {
+      margin: 12px 0;
+    }
+    h3 {
+      margin: 0 0 8px 0;
+      color: #323130;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h3>BlazorSnap - HTML to Blazor</h3>
+  <label for="source">Selected HTML:</label>
+  <textarea id="source" placeholder="Right-click an element and select 'Convert Element to Blazor Component'"></textarea>
+  <div class="button-row">
+    <button id="convert">Generate .razor</button>
+    <button id="copy">Copy to Clipboard</button>
+  </div>
+  <label for="result">Generated Blazor Component:</label>
+  <pre id="result">// Generated component will appear here...</pre>
+  <script src="popup.js"></script>
+</body>
+</html>
