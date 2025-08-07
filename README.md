@@ -160,16 +160,6 @@ CSS File (MyComponent.razor.css):
 - **Fallback mechanisms**: Works even when computed styles aren't available
 - **Cross-browser compatibility**: Works in Chrome, Edge, and other Chromium browsers
 
-## 🚧 Known Limitations
-
-- **Icon files missing**: You need to add icon files for proper extension display
-- **Complex animations**: CSS animations and transitions may not be fully captured
-- **Pseudo-elements**: ::before and ::after styles are not captured
-- **Media queries**: Responsive styles are captured for current viewport only
-- **CSS custom properties**: May not resolve correctly in all cases
-
-
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
