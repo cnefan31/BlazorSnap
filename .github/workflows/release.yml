@@ -30,16 +30,6 @@ jobs:
         echo "Package contents:"
         unzip -l BlazorSnap-v${{ steps.get_version.outputs.version }}.zip
         
-    - name: Upload release asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./BlazorSnap-v${{ steps.get_version.outputs.version }}.zip
-        asset_name: BlazorSnap-v${{ steps.get_version.outputs.version }}.zip
-        asset_content_type: application/zip
-        
     - name: Create Chrome Web Store package
       run: |
         cd src
@@ -48,12 +38,11 @@ jobs:
         zip -r ../BlazorSnap-store-v${{ steps.get_version.outputs.version }}.zip .
         cd ..
         
-    - name: Upload Chrome Web Store package
-      uses: actions/upload-release-asset@v1
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          BlazorSnap-v${{ steps.get_version.outputs.version }}.zip
+          BlazorSnap-store-v${{ steps.get_version.outputs.version }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ./BlazorSnap-store-v${{ steps.get_version.outputs.version }}.zip
-        asset_name: BlazorSnap-store-v${{ steps.get_version.outputs.version }}.zip
-        asset_content_type: application/zip
