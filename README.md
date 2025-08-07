@@ -14,6 +14,10 @@ Convert any HTML element into a reusable Blazor component with **exact visual re
 - **Smart CSS generation**: Creates companion CSS files with all necessary styles
 - **Blazor best practices**: Generates properly formatted .razor components
 
+## Demo
+
+![BlazorSnap](https://github.com/user-attachments/assets/dc2275db-4797-407e-ab47-bce770dd88f5)
+
 ## 📦 Installation
 
 ### From Source (Development)
@@ -34,10 +38,6 @@ Convert any HTML element into a reusable Blazor component with **exact visual re
    - **Clean/Simplified**: Converts utility classes to semantic CSS
 6. **Click "Generate .razor"** to convert to a Blazor component
 7. **Click "Copy to Clipboard"** to copy both the .razor component and CSS file
-
-## Demo
-
-![BlazorSnap](https://github.com/user-attachments/assets/dc2275db-4797-407e-ab47-bce770dd88f5)
 
 ## 🔧 What It Generates
 
