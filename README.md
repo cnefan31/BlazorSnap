@@ -35,6 +35,10 @@ Convert any HTML element into a reusable Blazor component with **exact visual re
 6. **Click "Generate .razor"** to convert to a Blazor component
 7. **Click "Copy to Clipboard"** to copy both the .razor component and CSS file
 
+## Demo
+
+![BlazorSnap](https://github.com/user-attachments/assets/dc2275db-4797-407e-ab47-bce770dd88f5)
+
 ## 🔧 What It Generates
 
 ### Exact Visual Copy Mode
