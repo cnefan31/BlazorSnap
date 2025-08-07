@@ -1,3 +1,5 @@
+_Submission to the browser extension stores is still in review._
+
 # BlazorSnap 🔥
 
 Convert any HTML element into a reusable Blazor component stub with just a right-click!
