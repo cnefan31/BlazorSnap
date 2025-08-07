@@ -8,36 +8,51 @@
       margin: 0; 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
       padding: 12px; 
-      width: 520px;
-      min-height: 450px;
+      width: 880px;
+      height: 700px;
+      max-height: 700px;
       font-size: 14px;
+      overflow: hidden;
+      box-sizing: border-box;
     }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      gap: 8px;
+    }
+    
     textarea, pre { 
       width: 100%; 
       box-sizing: border-box; 
       font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
       font-size: 12px;
     }
+    
     textarea { 
-      height: 120px; 
+      height: 100px; 
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 8px;
-      resize: vertical;
-      margin-bottom: 12px;
+      resize: none;
+      flex-shrink: 0;
     }
+    
     pre { 
       white-space: pre-wrap; 
-      margin: 8px 0; 
+      margin: 0; 
       padding: 12px; 
       background: #f8f9fa; 
       border: 1px solid #e9ecef;
       border-radius: 4px;
-      max-height: 300px;
       overflow-y: auto;
       font-size: 11px;
       line-height: 1.4;
+      flex: 1;
+      min-height: 0;
     }
+    
     button { 
       margin-right: 8px; 
       padding: 8px 16px;
@@ -48,30 +63,53 @@
       cursor: pointer;
       font-size: 14px;
     }
+    
     button:hover {
       background: #106ebe;
     }
+    
+    .header {
+      flex-shrink: 0;
+    }
+    
+    .input-section {
+      flex-shrink: 0;
+    }
+    
     .button-row {
-      margin: 12px 0;
+      margin: 8px 0;
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-shrink: 0;
     }
+    
     .options-row {
       margin: 8px 0;
       display: flex;
       align-items: center;
       gap: 16px;
       font-size: 13px;
+      flex-shrink: 0;
     }
+    
     .option-group {
       display: flex;
       align-items: center;
       gap: 6px;
     }
+    
+    .result-section {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    
     input[type="radio"] {
       margin: 0;
     }
+    
     h3 {
       margin: 0 0 8px 0;
       color: #323130;
@@ -80,48 +118,86 @@
       align-items: center;
       gap: 8px;
     }
+    
     .status {
       font-size: 12px;
       color: #666;
       font-weight: normal;
     }
+    
     .exact-copy {
       color: #107c10;
       font-weight: 600;
     }
+    
     .clean-copy {
       color: #0078d4;
       font-weight: 600;
     }
+    
+    /* Enhanced scrolling for better code visibility */
+    pre::-webkit-scrollbar {
+      width: 12px;
+    }
+    pre::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 6px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 6px;
+    }
+    pre::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+    
+    /* Better labels and spacing */
+    label {
+      font-weight: 600;
+      color: #323130;
+      margin-bottom: 4px;
+      display: block;
+    }
+    
+    /* Better spacing for the result area */
+    #result {
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
-  <h3>
-    BlazorSnap - HTML to Blazor
-    <span class="status" id="mode-status">Exact Visual Copy</span>
-  </h3>
-  
-  <label for="source">Selected HTML:</label>
-  <textarea id="source" placeholder="Right-click an element and select 'Convert Element to Blazor Component'"></textarea>
-  
-  <div class="options-row">
-    <div class="option-group">
-      <input type="radio" id="exact-mode" name="conversion-mode" value="exact" checked>
-      <label for="exact-mode" class="exact-copy">Exact Visual Copy</label>
+  <div class="container">
+    <div class="header">
+      <h3>
+        BlazorSnap - HTML to Blazor
+        <span class="status" id="mode-status">Exact Visual Copy</span>
+      </h3>
     </div>
-    <div class="option-group">
-      <input type="radio" id="clean-mode" name="conversion-mode" value="clean">
-      <label for="clean-mode" class="clean-copy">Clean/Simplified</label>
+    
+    <div class="input-section">
+      <label for="source">Selected HTML:</label>
+      <textarea id="source" placeholder="Right-click an element and select 'Convert Element to Blazor Component'"></textarea>
+      
+      <div class="options-row">
+        <div class="option-group">
+          <input type="radio" id="exact-mode" name="conversion-mode" value="exact" checked>
+          <label for="exact-mode" class="exact-copy">Exact Visual Copy</label>
+        </div>
+        <div class="option-group">
+          <input type="radio" id="clean-mode" name="conversion-mode" value="clean">
+          <label for="clean-mode" class="clean-copy">Clean/Simplified</label>
+        </div>
+      </div>
+      
+      <div class="button-row">
+        <button id="convert">Generate .razor</button>
+        <button id="copy">Copy to Clipboard</button>
+      </div>
     </div>
-  </div>
-  
-  <div class="button-row">
-    <button id="convert">Generate .razor</button>
-    <button id="copy">Copy to Clipboard</button>
-  </div>
-  
-  <label for="result">Generated Blazor Component:</label>
-  <pre id="result">// Generated component will appear here...
+    
+    <div class="result-section">
+      <label for="result">Generated Blazor Component:</label>
+      <pre id="result">// Generated component will appear here...
 // 
 // EXACT VISUAL COPY MODE:
 // - Preserves all computed styles for identical appearance
@@ -132,6 +208,8 @@
 // - Converts utility classes to semantic CSS
 // - Removes unnecessary attributes
 // - Best for maintainable components</pre>
+    </div>
+  </div>
   
   <script src="popup.js"></script>
 </body>
