@@ -1,0 +1,154 @@
+name: CI - Validate Extension
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Validate manifest.json
+      run: |
+        echo "Validating manifest.json..."
+        if ! jq empty src/manifest.json; then
+          echo "❌ manifest.json is not valid JSON"
+          exit 1
+        fi
+        echo "✅ manifest.json is valid JSON"
+        
+    - name: Check required manifest fields
+      run: |
+        echo "Checking required manifest fields..."
+        
+        # Check manifest version
+        if ! jq -e '.manifest_version' src/manifest.json > /dev/null; then
+          echo "❌ Missing manifest_version"
+          exit 1
+        fi
+        
+        # Check name
+        if ! jq -e '.name' src/manifest.json > /dev/null; then
+          echo "❌ Missing name"
+          exit 1
+        fi
+        
+        # Check version
+        if ! jq -e '.version' src/manifest.json > /dev/null; then
+          echo "❌ Missing version"
+          exit 1
+        fi
+        
+        # Check description
+        if ! jq -e '.description' src/manifest.json > /dev/null; then
+          echo "❌ Missing description"
+          exit 1
+        fi
+        
+        echo "✅ All required manifest fields present"
+        
+    - name: Validate file structure
+      run: |
+        echo "Checking file structure..."
+        
+        # Check for required files
+        required_files=(
+          "src/manifest.json"
+          "src/background.js"
+          "src/content.js"
+          "src/popup.html"
+          "src/popup.js"
+        )
+        
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Missing required file: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required files present"
+        
+    - name: Check for icon files
+      run: |
+        echo "Checking for icon files..."
+        
+        icon_files=(
+          "src/assets/icon16.png"
+          "src/assets/icon48.png"
+          "src/assets/icon128.png"
+        )
+        
+        for file in "${icon_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ Missing icon file: $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All icon files present"
+        
+    - name: Test extension package creation
+      run: |
+        echo "Testing extension package creation..."
+        cd src
+        zip -r ../test-package.zip . -x "README.md" "assets/README.md"
+        cd ..
+        
+        # Verify the package was created
+        if [ ! -f "test-package.zip" ]; then
+          echo "❌ Failed to create package"
+          exit 1
+        fi
+        
+        # Check package size (should be reasonable)
+        size=$(wc -c < test-package.zip)
+        if [ $size -gt 10485760 ]; then  # 10MB limit
+          echo "❌ Package too large: ${size} bytes"
+          exit 1
+        fi
+        
+        echo "✅ Package created successfully (${size} bytes)"
+        
+    - name: Validate JavaScript syntax
+      run: |
+        echo "Validating JavaScript files..."
+        
+        # Install Node.js for syntax checking
+        sudo apt-get update
+        sudo apt-get install -y nodejs
+        
+        # Check each JS file
+        js_files=(
+          "src/background.js"
+          "src/content.js"
+          "src/popup.js"
+        )
+        
+        for file in "${js_files[@]}"; do
+          echo "Checking $file..."
+          if ! node -c "$file"; then
+            echo "❌ Syntax error in $file"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All JavaScript files have valid syntax"
+        
+    - name: Generate build info
+      run: |
+        echo "Extension Build Information:" > build-info.txt
+        echo "==========================" >> build-info.txt
+        echo "Commit: $GITHUB_SHA" >> build-info.txt
+        echo "Branch: $GITHUB_REF_NAME" >> build-info.txt
+        echo "Build Date: $(date -u)" >> build-info.txt
+        echo "Extension Version: $(jq -r '.version' src/manifest.json)" >> build-info.txt
+        echo "Manifest Version: $(jq -r '.manifest_version' src/manifest.json)" >> build-info.txt
+        
+        cat build-info.txt

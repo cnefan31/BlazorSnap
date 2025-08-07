@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "BlazorSnap",
   "description": "Convert any HTML element into a reusable Blazor component stub",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "permissions": [
     "contextMenus",
     "scripting",
