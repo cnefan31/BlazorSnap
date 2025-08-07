@@ -8,8 +8,8 @@
       margin: 0; 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
       padding: 12px; 
-      width: 500px;
-      min-height: 400px;
+      width: 520px;
+      min-height: 450px;
       font-size: 14px;
     }
     textarea, pre { 
@@ -19,11 +19,12 @@
       font-size: 12px;
     }
     textarea { 
-      height: 150px; 
+      height: 120px; 
       border: 1px solid #ccc;
       border-radius: 4px;
       padding: 8px;
       resize: vertical;
+      margin-bottom: 12px;
     }
     pre { 
       white-space: pre-wrap; 
@@ -52,24 +53,86 @@
     }
     .button-row {
       margin: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .options-row {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .option-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    input[type="radio"] {
+      margin: 0;
     }
     h3 {
       margin: 0 0 8px 0;
       color: #323130;
       font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status {
+      font-size: 12px;
+      color: #666;
+      font-weight: normal;
+    }
+    .exact-copy {
+      color: #107c10;
+      font-weight: 600;
+    }
+    .clean-copy {
+      color: #0078d4;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h3>BlazorSnap - HTML to Blazor</h3>
+  <h3>
+    BlazorSnap - HTML to Blazor
+    <span class="status" id="mode-status">Exact Visual Copy</span>
+  </h3>
+  
   <label for="source">Selected HTML:</label>
   <textarea id="source" placeholder="Right-click an element and select 'Convert Element to Blazor Component'"></textarea>
+  
+  <div class="options-row">
+    <div class="option-group">
+      <input type="radio" id="exact-mode" name="conversion-mode" value="exact" checked>
+      <label for="exact-mode" class="exact-copy">Exact Visual Copy</label>
+    </div>
+    <div class="option-group">
+      <input type="radio" id="clean-mode" name="conversion-mode" value="clean">
+      <label for="clean-mode" class="clean-copy">Clean/Simplified</label>
+    </div>
+  </div>
+  
   <div class="button-row">
     <button id="convert">Generate .razor</button>
     <button id="copy">Copy to Clipboard</button>
   </div>
+  
   <label for="result">Generated Blazor Component:</label>
-  <pre id="result">// Generated component will appear here...</pre>
+  <pre id="result">// Generated component will appear here...
+// 
+// EXACT VISUAL COPY MODE:
+// - Preserves all computed styles for identical appearance
+// - Captures exact colors, spacing, fonts, etc.
+// - Best for pixel-perfect reproduction
+//
+// CLEAN/SIMPLIFIED MODE:  
+// - Converts utility classes to semantic CSS
+// - Removes unnecessary attributes
+// - Best for maintainable components</pre>
+  
   <script src="popup.js"></script>
 </body>
 </html>
