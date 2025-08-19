@@ -1,5 +1,3 @@
-_Submission to the browser extension stores is still in review._
-
 # BlazorSnap 🔥
 
 Convert any HTML element into a reusable Blazor component with **exact visual reproduction** or clean/simplified code!
@@ -19,6 +17,10 @@ Convert any HTML element into a reusable Blazor component with **exact visual re
 ![BlazorSnap](https://github.com/user-attachments/assets/dc2275db-4797-407e-ab47-bce770dd88f5)
 
 ## 📦 Installation
+
+### From the browser extension store
+
+You can download BlazorSnap from [the Edge Add-Ons](https://microsoftedge.microsoft.com/addons/detail/blazorsnap/mkfecbnmpjbkoocagddgkgbaidnjkmkb) or the [Google Chrome Web Store](https://chromewebstore.google.com/detail/blazorsnap/iibbeljciecfkdbfbkhmdbbcegbkhoke)
 
 ### From Source (Development)
 1. Clone this repository
