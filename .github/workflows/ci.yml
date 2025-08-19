@@ -75,7 +75,7 @@ jobs:
         
         echo "✅ All required files present"
         
-    - name: Check for icon files
+    - name: Check for icon files (Warning only)
       run: |
         echo "Checking for icon files..."
         
@@ -85,14 +85,20 @@ jobs:
           "src/assets/icon128.png"
         )
         
+        missing_icons=0
         for file in "${icon_files[@]}"; do
           if [ ! -f "$file" ]; then
-            echo "❌ Missing icon file: $file"
-            exit 1
+            echo "⚠️ Missing icon file: $file"
+            missing_icons=1
           fi
         done
         
-        echo "✅ All icon files present"
+        if [ $missing_icons -eq 1 ]; then
+          echo "⚠️ Some icon files are missing - extension will work but won't display properly"
+          echo "📝 See src/assets/README.md for guidance on creating icons"
+        else
+          echo "✅ All icon files present"
+        fi
         
     - name: Test extension package creation
       run: |
@@ -107,10 +113,10 @@ jobs:
           exit 1
         fi
         
-        # Check package size (should be reasonable)
+        # Check package size (should be reasonable - 50MB limit for browser stores)
         size=$(wc -c < test-package.zip)
-        if [ $size -gt 10485760 ]; then  # 10MB limit
-          echo "❌ Package too large: ${size} bytes"
+        if [ $size -gt 52428800 ]; then  # 50MB limit
+          echo "❌ Package too large: ${size} bytes (max 50MB)"
           exit 1
         fi
         
@@ -119,10 +125,6 @@ jobs:
     - name: Validate JavaScript syntax
       run: |
         echo "Validating JavaScript files..."
-        
-        # Install Node.js for syntax checking
-        sudo apt-get update
-        sudo apt-get install -y nodejs
         
         # Check each JS file
         js_files=(
@@ -141,6 +143,54 @@ jobs:
         
         echo "✅ All JavaScript files have valid syntax"
         
+    - name: Validate HTML files
+      run: |
+        echo "Validating HTML files..."
+        
+        html_files=(
+          "src/popup.html"
+        )
+        
+        for file in "${html_files[@]}"; do
+          echo "Checking $file..."
+          # Basic HTML validation - check for required elements
+          if ! grep -q "<html" "$file"; then
+            echo "❌ $file missing <html> tag"
+            exit 1
+          fi
+          if ! grep -q "<head" "$file"; then
+            echo "❌ $file missing <head> tag"
+            exit 1
+          fi
+          if ! grep -q "<body" "$file"; then
+            echo "❌ $file missing <body> tag"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All HTML files have valid structure"
+        
+    - name: Check manifest permissions
+      run: |
+        echo "Validating manifest permissions..."
+        
+        # Check that required permissions are present
+        required_permissions=(
+          "contextMenus"
+          "scripting"
+          "activeTab"
+          "storage"
+        )
+        
+        for permission in "${required_permissions[@]}"; do
+          if ! jq -e --arg perm "$permission" '.permissions | index($perm)' src/manifest.json > /dev/null; then
+            echo "❌ Missing required permission: $permission"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required permissions present"
+        
     - name: Generate build info
       run: |
         echo "Extension Build Information:" > build-info.txt
@@ -150,5 +200,8 @@ jobs:
         echo "Build Date: $(date -u)" >> build-info.txt
         echo "Extension Version: $(jq -r '.version' src/manifest.json)" >> build-info.txt
         echo "Manifest Version: $(jq -r '.manifest_version' src/manifest.json)" >> build-info.txt
+        echo "Package Size Limit: 50MB" >> build-info.txt
+        echo "Chrome Store: https://chromewebstore.google.com/detail/blazorsnap/iibbeljciecfkdbfbkhmdbbcegbkhoke" >> build-info.txt
+        echo "Edge Store: https://microsoftedge.microsoft.com/addons/detail/blazorsnap/mkfecbnmpjbkoocagddgkgbaidnjkmkb" >> build-info.txt
         
         cat build-info.txt

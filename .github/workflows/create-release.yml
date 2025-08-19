@@ -70,34 +70,36 @@ jobs:
         git push
         
     - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ github.event.inputs.version }}
-        release_name: BlazorSnap ${{ github.event.inputs.version }}
+        name: BlazorSnap ${{ github.event.inputs.version }}
         body: |
-          ## What's New in ${{ github.event.inputs.version }}
+          ## 🚀 What's New in ${{ github.event.inputs.version }}
           
           ${{ github.event.inputs.release_notes }}
           
-          ## Installation
+          ## 📦 Installation Options
           
-          ### For Users
+          ### 🏪 Browser Stores (Recommended)
+          - **Chrome Web Store**: [Install BlazorSnap](https://chromewebstore.google.com/detail/blazorsnap/iibbeljciecfkdbfbkhmdbbcegbkhoke)
+          - **Microsoft Edge Add-ons**: [Install BlazorSnap](https://microsoftedge.microsoft.com/addons/detail/blazorsnap/mkfecbnmpjbkoocagddgkgbaidnjkmkb)
+          
+          ### 💻 Manual Installation (Development)
           1. Download the `BlazorSnap-store-v*.zip` file below
           2. Extract it to a folder
           3. Open Chrome/Edge and go to `chrome://extensions/` or `edge://extensions/`
           4. Enable "Developer mode"
           5. Click "Load unpacked" and select the extracted folder
           
-          ### For Developers
+          ### 👨‍💻 For Developers
           Download the `BlazorSnap-v*.zip` file which includes all source files and documentation.
           
-          ## Chrome Web Store
-          This extension is also available on the Chrome Web Store: [Coming Soon]
-          
-          ---
-          
-          **Full Changelog**: https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md
+          ## 🔗 Links
+          - **Documentation**: [GitHub Repository](https://github.com/${{ github.repository }})
+          - **Issues & Support**: [GitHub Issues](https://github.com/${{ github.repository }}/issues)
+          - **Full Changelog**: [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)
         draft: false
         prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

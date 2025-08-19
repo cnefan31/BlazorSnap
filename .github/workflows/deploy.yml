@@ -1,0 +1,53 @@
+name: Deploy to Browser Stores
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Verify extension files
+      run: |
+        echo "Checking extension files..."
+        ls -la src/
+        cat src/manifest.json
+        
+    - name: Create extension package
+      run: |
+        cd src
+        zip -r ../blazorsnap-extension.zip . -x "*.DS_Store" "*Thumbs.db" "*.git*"
+        cd ..
+        echo "Package created:"
+        ls -la blazorsnap-extension.zip
+        
+    - name: Deploy to Chrome Web Store
+      if: ${{ secrets.CHROME_CLIENT_ID != '' }}
+      uses: mobilefirstllc/cws-publish@latest
+      with:
+        action: 'upload'
+        client_id: ${{ secrets.CHROME_CLIENT_ID }}
+        client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+        refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        extension_id: 'iibbeljciecfkdbfbkhmdbbcegbkhoke'
+        zip_file: 'blazorsnap-extension.zip'
+        
+    - name: Deploy to Microsoft Edge Add-ons
+      if: ${{ secrets.EDGE_CLIENT_ID != '' && secrets.EDGE_API_KEY != '' }}
+      run: |
+        echo "Uploading to Edge Add-ons using REST API..."
+        curl -X POST \
+          "https://api.addons.microsoftedge.microsoft.com/v1/products/mkfecbnmpjbkoocagddgkgbaidnjkmkb/submissions/draft/package" \
+          -H "Authorization: ApiKey ${{ secrets.EDGE_API_KEY }}" \
+          -H "Content-Type: application/zip" \
+          --data-binary @blazorsnap-extension.zip
